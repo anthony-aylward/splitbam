@@ -22,12 +22,12 @@ def parse_arguments():
         help='path to input BAM file'
     )
     parser.add_argument(
-        'output0',
+        'out0',
         metavar='<path/to/output0.bam>',
         help='path to first output BAM file'
     )
     parser.add_argument(
-        'output1',
+        'out1',
         metavar='<path/to/output1.bam>',
         help='path to second output BAM file'
     )
@@ -82,10 +82,5 @@ def main():
                     ('awk', f'{{if(NR%4<2){{print >> "{temp_out0}}}"}} else {{print >> "{temp_out1}}}"}}}}'),
                     stdin=view.stdout,
                 )
-        for tmp_out, out in (temp_out0, args.output0), (temp_out1, args.ouput1):
+        for tmp_out, out in (temp_out0, args.out0), (temp_out1, args.out1):
             pysam.view('-@', str(args.processes - 1), '-bh', '-o', out, tmp_out)
-
-
-
-    
-    
