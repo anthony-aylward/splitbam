@@ -23,8 +23,8 @@ def parse_arguments():
     )
     parser.add_argument(
         'output',
-        metavar=('<path/to/output1.bam>', '<path/to/output2.bam>'),
         nargs=2,
+        metavar=('<path/to/output1.bam>', '<path/to/output2.bam>'),
         help='paths to output BAM files'
     )
     parser.add_argument(
