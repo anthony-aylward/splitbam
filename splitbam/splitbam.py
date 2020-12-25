@@ -55,16 +55,11 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def extract_records(input_bam, output_sam, condition='NR%4<2'):
-    pysam.view(
-        '-@', str(args.processes - 1),
-        '-H',
-        '-o', output_sam,
-        input_bam
-    )
+def extract_records(input_bam, output_sam, condition='NR%4<2', processes=1):
+    pysam.view('-@', str(processes - 1), '-H', '-o', output_sam, input_bam)
     with open(input_bam, 'r') as f0, open(output_sam, 'a') as f1:
         with subprocess.Popen(
-            ('samtools', 'view'), stdin=f, stdout=subprocess.PIPE
+            ('samtools', 'view'), stdin=f0, stdout=subprocess.PIPE
         ) as view:
             subprocess.Popen(
                 ('awk', f'{{if({condition}){{print}}}}'),
@@ -91,8 +86,8 @@ def main():
             pool.starmap(
                 extract_records,
                 (
-                    (temp_in, temp_out0, 'NR%4<2'),
-                    (temp_in, temp_out1, 'NR%4>=2')
+                    (temp_in, temp_out0, 'NR%4<2', args.processes),
+                    (temp_in, temp_out1, 'NR%4>=2', args.processes)
                 )
             )
         for tmp_out, out in (temp_out0, args.out0), (temp_out1, args.out1):
