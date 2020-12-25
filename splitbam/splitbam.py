@@ -34,6 +34,7 @@ def parse_arguments():
     parser.add_argument(
         '--processes',
         metavar='<int>',
+        type=int,
         default=1,
         help='number of processes'
     )
