@@ -55,7 +55,7 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def extract_records(input_bam, output_sam, condition='NR%4<2')
+def extract_records(input_bam, output_sam, condition='NR%4<2'):
     pysam.view(
         '-@', str(args.processes - 1),
         '-H',
