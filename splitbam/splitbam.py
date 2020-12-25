@@ -9,6 +9,8 @@ import pysam
 import subprocess
 import tempfile
 
+from multiprocessing import Pool
+
 from argparse import ArgumentParser
 
 
@@ -72,7 +74,7 @@ def main():
                 '-@', str(args.processes - 1),
                 '-H',
                 '-o', out,
-                temp_in
+                args.input
             )
         with open(temp_in, 'r') as f:
             with subprocess.Popen(
