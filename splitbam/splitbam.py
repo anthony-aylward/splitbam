@@ -41,6 +41,7 @@ def parse_arguments():
     parser.add_argument(
         '--memory',
         metavar='<float>',
+        type=float,
         default=768/1024,
         help='memory limit in GB'
     )
