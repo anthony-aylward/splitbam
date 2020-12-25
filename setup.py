@@ -18,7 +18,7 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent"
     ],
-    install_requires=[],
+    install_requires=['pysam'],
     entry_points={
         'console_scripts': ['splitbam=splitbam.splitbam:main',]
     }
