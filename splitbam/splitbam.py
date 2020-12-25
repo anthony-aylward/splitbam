@@ -22,10 +22,14 @@ def parse_arguments():
         help='path to input BAM file'
     )
     parser.add_argument(
-        'output',
-        nargs=2,
-        metavar=('<path/to/output1.bam>', '<path/to/output2.bam>'),
-        help='paths to output BAM files'
+        'output0',
+        metavar='<path/to/output0.bam>',
+        help='path to first output BAM file'
+    )
+    parser.add_argument(
+        'output1',
+        metavar='<path/to/output1.bam>',
+        help='path to second output BAM file'
     )
     parser.add_argument(
         '--tmp-dir',
@@ -52,8 +56,8 @@ def main():
                     ('awk', f'{{if(NR%4<2){{print >> "{temp_out0}}}"}} else {{print >> "{temp_out1}}}"}}}}'),
                     stdin=view.stdout,
                 )
-        pysam.view('-bh', '-o', args.output[0], temp_out0)
-        pysam.view('-bh', '-o', args.output[1], temp_out1)
+        pysam.view('-bh', '-o', args.output0, temp_out0)
+        pysam.view('-bh', '-o', args.output1, temp_out1)
 
 
 
