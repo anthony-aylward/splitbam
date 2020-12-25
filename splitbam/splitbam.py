@@ -40,7 +40,7 @@ def parse_arguments():
     parser.add_argument(
         '--memory',
         metavar='<float>',
-        default=int(768/1024),
+        default=768/1024,
         help='memory limit in GB'
     )
     parser.add_argument(
@@ -59,7 +59,7 @@ def main():
         temp_out1 = os.path.join(temp_dir, 'namesort_out2.sam')
         pysam.sort(
             '-@', str(args.processes - 1),
-            '-m', f'{args.memory * 1024}M'
+            '-m', f'{int(args.memory * 1024)}M'
             '-n',
             '-T', temp_dir,
             '-o', temp_in,
