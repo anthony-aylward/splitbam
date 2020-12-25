@@ -32,6 +32,18 @@ def parse_arguments():
         help='path to second output BAM file'
     )
     parser.add_argument(
+        '--processes',
+        metavar='<int>',
+        default=1,
+        help='number of processes'
+    )
+    parser.add_argument(
+        '--memory',
+        metavar='<float>',
+        default=int(768/1024),
+        help='memory limit in GB'
+    )
+    parser.add_argument(
         '--tmp-dir',
         metavar='<path/to/tmp/dir>',
         help='directory for temporary files'
@@ -45,9 +57,21 @@ def main():
         temp_in = os.path.join(temp_dir, 'namesort_in.bam')
         temp_out0 = os.path.join(temp_dir, 'namesort_out1.sam')
         temp_out1 = os.path.join(temp_dir, 'namesort_out2.sam')
-        pysam.sort('-n', '-o', temp_in, args.input)
-        pysam.view('-H', '-o', temp_out0, temp_in)
-        pysam.view('-H', '-o', temp_out1, temp_in,)
+        pysam.sort(
+            '-@', str(args.processes - 1),
+            '-m', f'{args.memory * 1024}M'
+            '-n',
+            '-T', temp_dir,
+            '-o', temp_in,
+            args.input
+        )
+        for out in temp_out0, temp_out1:
+            pysam.view(
+                '-@', str(args.processes - 1),
+                '-H',
+                '-o', out,
+                temp_in
+            )
         with open(temp_in, 'r') as f:
             with subprocess.Popen(
                 ('samtools', 'view'), stdin=f, stdout=subprocess.PIPE
@@ -56,8 +80,8 @@ def main():
                     ('awk', f'{{if(NR%4<2){{print >> "{temp_out0}}}"}} else {{print >> "{temp_out1}}}"}}}}'),
                     stdin=view.stdout,
                 )
-        pysam.view('-bh', '-o', args.output0, temp_out0)
-        pysam.view('-bh', '-o', args.output1, temp_out1)
+        for tmp_out, out in (temp_out0, args.output0), (temp_out1, args.ouput1):
+            pysam.view('-@', str(args.processes - 1), '-bh', '-o', out, tmp_out)
 
 
 
