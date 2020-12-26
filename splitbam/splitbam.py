@@ -92,3 +92,4 @@ def main():
                 '-o', out,
                 temp_out
             )
+            pysam.index(out)
