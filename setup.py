@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='splitbam',
-    version='0.1.0',
+    version='0.1.1',
     author='Anthony Aylward',
     author_email='aaylward@eng.ucsd.edu',
     description='Split a BAM file into two subsamples',
