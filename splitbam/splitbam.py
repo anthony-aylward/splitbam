@@ -84,13 +84,11 @@ def main():
                     ('awk', f'{{if(NR%4<2) {{print >> "{temp_out0}"}} else {{print >> "{temp_out1}"}}}}'),
                     stdin=view.stdout
                 )
-        shutil.copyfile(temp_out0, 'namesort_out0.sam')
-        shutil.copyfile(temp_out1, 'namesort_out1.sam')
-        for tmp_out, out in (temp_out0, args.out0), (temp_out1, args.out1):
-            pysam.view(
+        for temp_out, out in (temp_out0, args.out0), (temp_out1, args.out1):
+            pysam.sort(
                 '-@', str(args.processes - 1),
-                '-bh',
+                '-m', f'{int(args.memory / args.processes * 1024)}M'
+                '-T', temp_dir,
                 '-o', out,
-                tmp_out,
-                catch_stdout=False
+                temp_out
             )
