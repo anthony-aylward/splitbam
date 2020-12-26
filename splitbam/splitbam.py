@@ -78,10 +78,9 @@ def main():
             with subprocess.Popen(
                 ('samtools', 'view'), stdin=f, stdout=subprocess.PIPE
             ) as view:
-                with subprocess.Popen(
-                    ('awk', f'{{if(NR%4<2){{print >> "{temp_out0}}}"}} else {{print >> "{temp_out1}}}"}}}}'),
-                    stdin=view.stdout,
-                ) as awk:
-                    awk.communicate()
+                subprocess.run(
+                    ('awk', f'{{if(NR%4<2){{print >> "{temp_out0}"}} else {{print >> "{temp_out1}"}}}}'),
+                    stdin=view.stdout
+                )
         for tmp_out, out in (temp_out0, args.out0), (temp_out1, args.out1):
             pysam.view('-@', str(args.processes - 1), '-bh', '-o', out, tmp_out)
