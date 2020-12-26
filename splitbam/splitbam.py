@@ -64,7 +64,7 @@ def main():
             '-@', str(args.processes - 1),
             '-m', f'{int(args.memory / args.processes * 1024)}M'
             '-n',
-            '-T', temp_dir,
+            '-T', args.tmp_dir,
             '-o', temp_in,
             args.input
         )
@@ -88,7 +88,7 @@ def main():
             pysam.sort(
                 '-@', str(args.processes - 1),
                 '-m', f'{int(args.memory / args.processes * 1024)}M'
-                '-T', temp_dir,
+                '-T', args.tmp_dir,
                 '-o', out,
                 temp_out
             )
