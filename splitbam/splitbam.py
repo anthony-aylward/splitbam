@@ -69,18 +69,19 @@ def main():
             args.input
         )
         for out in temp_out0, temp_out1:
-            pysam.view(
+            subprocess.run((
+                'samtools', 'view',
                 '-@', str(args.processes - 1),
                 '-H',
                 '-o', out,
                 temp_in
-            )
+            ))
         with open(temp_in, 'r') as f:
             with subprocess.Popen(
                 ('samtools', 'view'), stdin=f, stdout=subprocess.PIPE
             ) as view:
                 subprocess.run(
-                    ('awk', f'{{ if(NR%4<2) {{print >> "{temp_out0}"}} else {{print >> "{temp_out1}"}}}}'),
+                    ('awk', f'{{if(NR%4<2) {{print >> "{temp_out0}"}} else {{print >> "{temp_out1}"}}}}'),
                     stdin=view.stdout
                 )
         shutil.copyfile(temp_out0, 'namesort_out0.sam')
