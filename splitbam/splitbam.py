@@ -6,6 +6,7 @@
 
 import os.path
 import pysam
+import shutil
 import subprocess
 import tempfile
 
@@ -82,6 +83,7 @@ def main():
                     ('awk', f'{{ if(NR%4<2) {{print >> "{temp_out0}"}} else {{print >> "{temp_out1}"}}}}'),
                     stdin=view.stdout
                 )
-        raise SystemExit()
+        shutil.copyfile(temp_out0, 'namesort_out0.sam')
+        shutil.copyfile(temp_out1, 'namesort_out1.sam')
         for tmp_out, out in (temp_out0, args.out0), (temp_out1, args.out1):
             pysam.view('-@', str(args.processes - 1), '-bh', '-o', out, tmp_out)
