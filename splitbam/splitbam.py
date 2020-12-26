@@ -6,7 +6,6 @@
 
 import os.path
 import pysam
-import shutil
 import subprocess
 import tempfile
 
