@@ -69,13 +69,13 @@ def main():
             args.input
         )
         for out in temp_out0, temp_out1:
-            subprocess.run((
-                'samtools', 'view',
+            pysam.view(
                 '-@', str(args.processes - 1),
                 '-H',
                 '-o', out,
-                temp_in
-            ))
+                temp_in,
+                catch_stdout=False
+            )
         with open(temp_in, 'r') as f:
             with subprocess.Popen(
                 ('samtools', 'view'), stdin=f, stdout=subprocess.PIPE
@@ -87,4 +87,10 @@ def main():
         shutil.copyfile(temp_out0, 'namesort_out0.sam')
         shutil.copyfile(temp_out1, 'namesort_out1.sam')
         for tmp_out, out in (temp_out0, args.out0), (temp_out1, args.out1):
-            pysam.view('-@', str(args.processes - 1), '-bh', '-o', out, tmp_out)
+            pysam.view(
+                '-@', str(args.processes - 1),
+                '-bh',
+                '-o', out,
+                tmp_out,
+                catch_stdout=False
+            )
