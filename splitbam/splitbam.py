@@ -62,7 +62,7 @@ def main():
         temp_out1 = os.path.join(temp_dir, 'namesort_out2.sam')
         pysam.sort(
             '-@', str(args.processes - 1),
-            '-m', f'{int(args.memory / args.processes * 1024)}M'
+            '-m', f'{int(args.memory / args.processes * 1024)}M',
             '-n',
             '-T', args.tmp_dir or tempfile.gettempdir(),
             '-o', temp_in,
@@ -87,7 +87,7 @@ def main():
         for temp_out, out in (temp_out0, args.out0), (temp_out1, args.out1):
             pysam.sort(
                 '-@', str(args.processes - 1),
-                '-m', f'{int(args.memory / args.processes * 1024)}M'
+                '-m', f'{int(args.memory / args.processes * 1024)}M',
                 '-T', args.tmp_dir or tempfile.gettempdir(),
                 '-o', out,
                 temp_out
