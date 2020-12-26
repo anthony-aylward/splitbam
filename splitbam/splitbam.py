@@ -79,8 +79,9 @@ def main():
                 ('samtools', 'view'), stdin=f, stdout=subprocess.PIPE
             ) as view:
                 subprocess.run(
-                    ('awk', f'{{if(NR%4<2){{print >> "{temp_out0}"}} else {{print >> "{temp_out1}"}}}}'),
+                    ('awk', f'{{ if(NR%4<2) {{print >> "{temp_out0}"}} else {{print >> "{temp_out1}"}}}}'),
                     stdin=view.stdout
                 )
+        raise SystemExit()
         for tmp_out, out in (temp_out0, args.out0), (temp_out1, args.out1):
             pysam.view('-@', str(args.processes - 1), '-bh', '-o', out, tmp_out)
